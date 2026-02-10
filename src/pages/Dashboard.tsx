@@ -66,11 +66,11 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <CollectiveGoal />
         <ReferralLink />
+        <VipGroup />
         <PrizeCards />
         <Ranking />
-        <VipGroup />
+        <CollectiveGoal />
       </main>
 
       

@@ -26,29 +26,26 @@ export function ReferralLink() {
   };
 
   return (
-    <div className="bg-gradient-card rounded-xl p-6 shadow-soft border border-border">
-      <h3 className="font-display text-lg font-bold mb-2 text-foreground">Seu Link de Indicação</h3>
-      <p className="text-sm text-muted-foreground font-body mb-4">
-        Compartilhe e ganhe prêmios a cada amiga que se cadastrar!
+    <div className="bg-gradient-card rounded-xl p-6 shadow-soft border border-border text-center">
+      <h3 className="font-display text-2xl font-bold mb-1 text-foreground">
+        Convide amigos e <span className="text-secondary italic">Desbloqueie Cupons</span>
+      </h3>
+      <p className="text-sm text-muted-foreground font-body mb-5">
+        Compartilhe seu link e desbloqueie cupons exclusivos!
       </p>
 
       <div className="flex gap-2 mb-4">
         <div className="flex-1 bg-card rounded-lg px-4 py-3 text-sm font-body text-muted-foreground truncate border border-border">
           {link}
         </div>
-        <Button onClick={copyLink} variant="outline" size="icon" className="shrink-0">
-          {copied ? <Check className="h-4 w-4 text-badge-unlocked" /> : <Copy className="h-4 w-4" />}
+        <Button onClick={copyLink} className="bg-progress-bar hover:bg-progress-bar/90 text-primary-foreground font-body shrink-0 px-5">
+          <Copy className="mr-2 h-4 w-4" /> Copiar
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Button onClick={copyLink} variant="outline" className="font-body">
-          <Copy className="mr-2 h-4 w-4" /> Copiar Link
-        </Button>
-        <Button onClick={shareWhatsApp} className="bg-[hsl(142,70%,45%)] hover:bg-[hsl(142,70%,40%)] text-primary-foreground font-body">
-          <Share2 className="mr-2 h-4 w-4" /> WhatsApp
-        </Button>
-      </div>
+      <p className="text-xs text-secondary font-body">
+        Compartilhe este link nas redes sociais ou envie diretamente para seus amigos
+      </p>
     </div>
   );
 }
