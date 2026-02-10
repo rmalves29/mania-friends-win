@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +16,30 @@ export function SignupForm({ referralCode }: SignupFormProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '' });
+
+  const linkReferralIfNeeded = async (email: string, refCode?: string) => {
+    if (!refCode) return;
+    try {
+      const { data: referrer } = await (supabase as any)
+        .from('profiles')
+        .select('id')
+        .eq('referral_code', refCode)
+        .maybeSingle();
+      if (!referrer) return;
+
+      const { data: existingProfile } = await (supabase as any)
+        .from('profiles')
+        .select('id, referred_by')
+        .eq('email', email)
+        .maybeSingle();
+      if (existingProfile && !existingProfile.referred_by) {
+        await (supabase as any).from('profiles').update({ referred_by: referrer.id }).eq('id', existingProfile.id);
+        await (supabase as any).rpc('increment_referral_count', { referrer_id: referrer.id });
+      }
+    } catch (err) {
+      console.error('Error linking referral on login:', err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +57,7 @@ export function SignupForm({ referralCode }: SignupFormProps) {
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : '';
         if (errorMessage.includes('already registered') || errorMessage.includes('already exists')) {
+          await linkReferralIfNeeded(form.email, referralCode);
           await signIn(form.email, password);
           toast({ title: '👋 Bem-vinda de volta!' });
         } else {
