@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { AddressModal } from '@/components/AddressModal';
+
 import { CollectiveGoal } from '@/components/CollectiveGoal';
 import { ReferralLink } from '@/components/ReferralLink';
 import { PrizeCards } from '@/components/PrizeCards';
@@ -13,19 +13,11 @@ import { LogOut, Users, Sparkles } from 'lucide-react';
 const Dashboard = () => {
   const { user, profile, loading, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
-  const [showAddress, setShowAddress] = useState(false);
-
   useEffect(() => {
     if (!loading && !user) {
       navigate('/');
     }
   }, [user, loading, navigate]);
-
-  useEffect(() => {
-    if (profile && !profile.address) {
-      setShowAddress(true);
-    }
-  }, [profile]);
 
   if (loading || !profile) {
     return (
@@ -72,7 +64,7 @@ const Dashboard = () => {
         <VipGroup />
       </main>
 
-      <AddressModal open={showAddress} onClose={() => setShowAddress(false)} />
+      
     </div>
   );
 };
