@@ -133,7 +133,21 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      profiles_ranking: {
+        Row: {
+          name: string | null
+          referral_count: number | null
+        }
+        Insert: {
+          name?: string | null
+          referral_count?: number | null
+        }
+        Update: {
+          name?: string | null
+          referral_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_referral_code: { Args: never; Returns: string }

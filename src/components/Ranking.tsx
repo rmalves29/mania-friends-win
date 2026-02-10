@@ -20,11 +20,7 @@ export function Ranking() {
 
   useEffect(() => {
     (supabase as any)
-      .from('profiles')
-      .select('name, referral_count')
-      .gt('referral_count', 0)
-      .order('referral_count', { ascending: false })
-      .limit(10)
+      .rpc('get_ranking', { limit_count: 10 })
       .then(({ data }: { data: RankItem[] | null }) => {
         setRanking(data || []);
       });
