@@ -25,7 +25,6 @@ export function SignupForm({ referralCode }: SignupFormProps) {
 
     setLoading(true);
     try {
-      // Try signup first, if user exists try login
       const password = form.email + '_mgm_2026';
       try {
         await signUp(form.email, password, form.name, form.whatsapp, referralCode);
@@ -48,43 +47,43 @@ export function SignupForm({ referralCode }: SignupFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-5 w-full max-w-md mx-auto">
       <div className="space-y-2">
-        <Label htmlFor="name" className="text-foreground font-body">Nome Completo</Label>
+        <Label htmlFor="name" className="text-foreground font-body text-sm font-medium">Nome Completo</Label>
         <Input
           id="name"
           placeholder="Seu nome completo"
           value={form.name}
           onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
-          className="bg-card border-border h-12 font-body"
+          className="bg-background/70 border-border/50 h-12 font-body rounded-xl focus:ring-2 focus:ring-secondary/30 transition-all"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground font-body">E-mail</Label>
+        <Label htmlFor="email" className="text-foreground font-body text-sm font-medium">E-mail</Label>
         <Input
           id="email"
           type="email"
           placeholder="seu@email.com"
           value={form.email}
           onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
-          className="bg-card border-border h-12 font-body"
+          className="bg-background/70 border-border/50 h-12 font-body rounded-xl focus:ring-2 focus:ring-secondary/30 transition-all"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="whatsapp" className="text-foreground font-body">WhatsApp</Label>
+        <Label htmlFor="whatsapp" className="text-foreground font-body text-sm font-medium">WhatsApp</Label>
         <Input
           id="whatsapp"
           placeholder="(00) 00000-0000"
           value={form.whatsapp}
           onChange={(e) => setForm(prev => ({ ...prev, whatsapp: e.target.value }))}
-          className="bg-card border-border h-12 font-body"
+          className="bg-background/70 border-border/50 h-12 font-body rounded-xl focus:ring-2 focus:ring-secondary/30 transition-all"
         />
       </div>
 
       <Button
         type="submit"
         disabled={loading}
-        className="w-full h-14 text-lg font-display bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-glow transition-all duration-300"
+        className="w-full h-14 text-base font-body font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-glow rounded-xl transition-all duration-300 hover:shadow-elevated hover:scale-[1.01]"
       >
         {loading ? (
           <Loader2 className="animate-spin mr-2 h-5 w-5" />

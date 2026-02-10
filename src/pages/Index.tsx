@@ -30,53 +30,53 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <div className="container max-w-2xl mx-auto px-4 py-8 flex flex-col items-center min-h-screen justify-center">
+      <div className="container max-w-2xl mx-auto px-6 py-12 flex flex-col items-center min-h-screen justify-center">
         {/* Logo */}
-        <div className="mb-6">
+        <div className="mb-8">
           <img src={logo} alt="Mania de Mulher" className="h-24 md:h-32 mx-auto" />
         </div>
 
         {/* Evento Exclusivo badge */}
-        <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-secondary" />
-          <span className="font-display text-sm md:text-base font-semibold uppercase tracking-[0.2em] text-secondary">
+        <div className="flex items-center gap-2 mb-5">
+          <Sparkles className="h-4 w-4 text-secondary" />
+          <span className="font-body text-xs md:text-sm font-semibold uppercase tracking-[0.25em] text-secondary">
             Evento Exclusivo
           </span>
-          <Sparkles className="h-5 w-5 text-secondary" />
+          <Sparkles className="h-4 w-4 text-secondary" />
         </div>
 
         {/* Headline */}
-        <h1 className="font-display text-4xl md:text-6xl font-extrabold italic text-foreground text-center mb-4 leading-tight">
+        <h1 className="font-display text-4xl md:text-6xl font-extrabold italic text-foreground text-center mb-5 leading-tight">
           O SITE VAI FECHAR!
         </h1>
 
         {/* Offer banner */}
-        <div className="bg-foreground text-background font-display text-lg md:text-2xl font-bold px-6 md:px-10 py-3 rounded-full mb-4 text-center tracking-wide shadow-soft">
+        <div className="bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full mb-5 text-center tracking-wider shadow-elevated">
           INDIQUE AMIGAS E GANHE PRÊMIOS
         </div>
 
         {/* Subtitle */}
-        <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-6">
+        <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-8 leading-relaxed">
           Somente para quem estiver no grupo vip do WhatsApp!
         </p>
 
         {/* Countdown label */}
-        <p className="text-center text-xs md:text-sm text-muted-foreground font-display font-bold mb-3 uppercase tracking-[0.15em]">
+        <p className="text-center text-xs md:text-sm text-muted-foreground font-body font-semibold mb-4 uppercase tracking-[0.2em]">
           O site fecha em
         </p>
 
         {/* Countdown */}
-        <div className="mb-10">
+        <div className="mb-12">
           <CountdownTimer targetDate={settings?.countdown_end || '2026-03-01T23:59:59'} />
         </div>
 
         {/* Signup Form */}
-        <div className="w-full max-w-md bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-soft border border-border">
-          <div className="text-center mb-6">
+        <div className="w-full max-w-md glass rounded-2xl p-8 md:p-10 shadow-elevated">
+          <div className="text-center mb-7">
             <h2 className="font-display text-xl font-bold text-foreground">
               Garanta seu lugar agora
             </h2>
-            <p className="text-sm text-muted-foreground font-body mt-1">
+            <p className="text-sm text-muted-foreground font-body mt-1.5">
               Preencha seus dados e comece a ganhar
             </p>
           </div>
@@ -84,10 +84,17 @@ const Index = () => {
         </div>
 
         {/* Trust */}
-        <p className="text-xs text-muted-foreground font-body mt-6 text-center">
+        <p className="text-xs text-muted-foreground font-body mt-8 text-center tracking-wide">
           🔒 Seus dados estão seguros. Não compartilhamos com terceiros.
         </p>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-border/50 py-6">
+        <p className="text-center text-xs text-muted-foreground font-body tracking-wide">
+          © 2026 Mania de Mulher · Todos os direitos reservados
+        </p>
+      </footer>
     </div>
   );
 };
