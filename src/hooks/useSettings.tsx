@@ -5,6 +5,10 @@ export interface SiteSettings {
   countdown_end: string;
   whatsapp_link: string;
   collective_goal: number;
+  collective_goal_badge: string;
+  collective_goal_title: string;
+  collective_goal_subtitle: string;
+  collective_goal_reward_text: string;
   logo_url: string;
   primary_color: string;
   accent_color: string;
@@ -29,6 +33,10 @@ export function useSettings() {
         countdown_end: (settings.countdown_end as string) || '2026-03-01T23:59:59',
         whatsapp_link: (settings.whatsapp_link as string) || '',
         collective_goal: (settings.collective_goal as number) || 1000,
+        collective_goal_badge: (settings.collective_goal_badge as string) || '🏆 Meta Coletiva',
+        collective_goal_title: (settings.collective_goal_title as string) || 'Desbloqueie o SUPER CUPOM',
+        collective_goal_subtitle: (settings.collective_goal_subtitle as string) || 'Juntos, vamos atingir 1.000 indicações!',
+        collective_goal_reward_text: (settings.collective_goal_reward_text as string) || '50% de desconto em qualquer peça!',
         logo_url: (settings.logo_url as string) || '',
         primary_color: (settings.primary_color as string) || '#8B6F5C',
         accent_color: (settings.accent_color as string) || '#D4A69A',

@@ -139,6 +139,10 @@ const Admin = () => {
               { key: 'countdown_end', label: 'Data Final do Cronômetro', type: 'text' },
               { key: 'whatsapp_link', label: 'Link do Grupo WhatsApp', type: 'url' },
               { key: 'collective_goal', label: 'Meta Coletiva (número)', type: 'number' },
+              { key: 'collective_goal_badge', label: 'Badge da Meta Coletiva (ex: 🏆 Meta Coletiva)', type: 'text' },
+              { key: 'collective_goal_title', label: 'Título da Meta Coletiva', type: 'text' },
+              { key: 'collective_goal_subtitle', label: 'Subtítulo da Meta Coletiva', type: 'text' },
+              { key: 'collective_goal_reward_text', label: 'Texto do Prêmio da Meta Coletiva', type: 'text' },
             ].map(({ key, label, type }) => (
               <div key={key} className="bg-card rounded-xl p-4 border border-border">
                 <Label className="font-body font-bold">{label}</Label>
