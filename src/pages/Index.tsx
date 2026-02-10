@@ -47,7 +47,7 @@ const Index = () => {
 
         {/* Headline */}
         <h1 className="font-display text-4xl md:text-6xl font-extrabold italic text-foreground text-center mb-5 leading-tight">
-          O SITE VAI FECHAR!
+          INDIQUE E GANHE!
         </h1>
 
         {/* Offer banner */}
