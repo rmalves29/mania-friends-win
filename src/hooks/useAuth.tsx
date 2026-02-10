@@ -137,6 +137,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (referrerId) {
       await (supabase as any).rpc('increment_referral_count', { referrer_id: referrerId });
     }
+
+    // Fetch profile immediately after insert to avoid race condition
+    await fetchProfile(authData.user.id);
+    await checkAdmin(authData.user.id);
   };
 
   const signIn = async (email: string, password: string) => {

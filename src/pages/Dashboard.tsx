@@ -12,13 +12,26 @@ import { LogOut, Users, Sparkles } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 const Dashboard = () => {
-  const { user, profile, loading, signOut, isAdmin } = useAuth();
+  const { user, profile, loading, signOut, isAdmin, refreshProfile } = useAuth();
   const navigate = useNavigate();
+  const [profileRetries, setProfileRetries] = useState(0);
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/');
     }
   }, [user, loading, navigate]);
+
+  // Retry fetching profile if it's null after login (race condition)
+  useEffect(() => {
+    if (!loading && user && !profile && profileRetries < 5) {
+      const timer = setTimeout(() => {
+        refreshProfile();
+        setProfileRetries(prev => prev + 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, user, profile, profileRetries, refreshProfile]);
 
   if (loading) {
     return (
@@ -31,7 +44,8 @@ const Dashboard = () => {
   if (!profile) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground font-body">Carregando perfil...</p>
+        <Sparkles className="h-8 w-8 animate-pulse-slow text-secondary" />
+        <p className="text-muted-foreground font-body ml-3">Carregando perfil...</p>
       </div>
     );
   }
