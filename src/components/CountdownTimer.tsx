@@ -32,13 +32,13 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
   ];
 
   return (
-    <div className="flex gap-3 justify-center">
+    <div className="flex gap-4 justify-center">
       {units.map((unit) => (
         <div key={unit.label} className="flex flex-col items-center">
-          <div className="bg-primary text-primary-foreground font-display text-2xl md:text-4xl font-bold rounded-lg w-16 md:w-20 h-16 md:h-20 flex items-center justify-center animate-countdown shadow-soft">
+          <div className="border-2 border-border bg-card text-foreground font-display text-3xl md:text-4xl font-bold rounded-xl w-18 md:w-22 h-18 md:h-22 flex items-center justify-center shadow-soft" style={{ width: '4.5rem', height: '4.5rem' }}>
             {String(unit.value).padStart(2, '0')}
           </div>
-          <span className="text-xs mt-1 text-muted-foreground font-body uppercase tracking-wider">
+          <span className="text-[10px] mt-2 text-muted-foreground font-body uppercase tracking-[0.15em] font-semibold">
             {unit.label}
           </span>
         </div>
