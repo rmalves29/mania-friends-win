@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SignupForm } from '@/components/SignupForm';
+import { LoginByEmail } from '@/components/LoginByEmail';
 import { Sparkles } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
@@ -81,6 +82,11 @@ const Index = () => {
             </p>
           </div>
           <SignupForm referralCode={ref} />
+        </div>
+
+        {/* Login Section */}
+        <div className="w-full max-w-md mt-8">
+          <LoginByEmail />
         </div>
 
         {/* Trust */}
