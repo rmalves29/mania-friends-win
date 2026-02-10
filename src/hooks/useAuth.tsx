@@ -114,14 +114,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: refCode } = await (supabase as any).rpc('generate_referral_code');
 
+    // Use SECURITY DEFINER RPC to look up referrer (bypasses RLS)
     let referrerId: string | null = null;
     if (referredBy) {
-      const { data: referrer } = await (supabase as any)
-        .from('profiles')
-        .select('id')
-        .eq('referral_code', referredBy)
-        .maybeSingle();
-      if (referrer) referrerId = referrer.id;
+      const { data: rid } = await (supabase as any).rpc('lookup_referrer_id', { _referral_code: referredBy });
+      if (rid) referrerId = rid;
     }
 
     const { error: profileError } = await (supabase as any).from('profiles').insert({
