@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 import { CollectiveGoal } from '@/components/CollectiveGoal';
 import { ReferralLink } from '@/components/ReferralLink';
@@ -32,6 +33,37 @@ const Dashboard = () => {
       return () => clearTimeout(timer);
     }
   }, [loading, user, profile, profileRetries, refreshProfile]);
+
+  // Realtime: refresh profile when referral_count changes
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel('profile-updates')
+      .on(
+        'postgres_changes' as any,
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'profiles',
+          filter: `id=eq.${user.id}`,
+        },
+        () => {
+          refreshProfile();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, refreshProfile]);
+
+  // Refresh profile on tab focus
+  useEffect(() => {
+    const onFocus = () => { if (user) refreshProfile(); };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [user, refreshProfile]);
 
   if (loading) {
     return (
