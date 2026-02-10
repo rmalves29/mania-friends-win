@@ -20,10 +20,18 @@ const Dashboard = () => {
     }
   }, [user, loading, navigate]);
 
-  if (loading || !profile) {
+  if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <Sparkles className="h-8 w-8 animate-pulse-slow text-secondary" />
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground font-body">Carregando perfil...</p>
       </div>
     );
   }
