@@ -36,7 +36,7 @@ const Index = () => {
         <LoginByEmail variant="top" />
       </div>
 
-      <div className="container max-w-2xl mx-auto px-6 py-8 flex flex-col items-center min-h-screen justify-center">
+      <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col items-center min-h-[90vh] justify-center">
         {/* Logo */}
         <div className="mb-8">
           <img src={logo} alt="Mania de Mulher" className="h-24 md:h-32 mx-auto" />
