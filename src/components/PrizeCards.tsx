@@ -59,7 +59,9 @@ export function PrizeCards() {
                 </span>
               </div>
 
-              <h4 className="font-display font-bold text-foreground text-lg">{reward.title}</h4>
+              <h4 className="font-display font-bold text-foreground text-lg">
+                {unlocked ? '✅ Cupom Desbloqueado' : reward.title}
+              </h4>
               <p className="text-sm font-body mt-1.5 text-foreground/65 leading-relaxed">{reward.description}</p>
 
               {unlocked && reward.coupon_code && (
