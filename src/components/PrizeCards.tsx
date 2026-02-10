@@ -26,13 +26,13 @@ export function PrizeCards() {
   return (
     <div className="space-y-5">
       <h3 className="font-display text-xl font-bold text-foreground text-center">🎁 Seus Prêmios</h3>
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {rewards.map((reward) => {
           const unlocked = referralCount >= reward.milestone;
           return (
             <div
               key={reward.id}
-              className={`relative rounded-2xl p-5 transition-all duration-300 hover-lift min-w-[180px] flex-1 ${
+              className={`relative rounded-2xl p-5 transition-all duration-300 hover-lift ${
                 unlocked
                   ? 'glass shadow-elevated'
                   : 'bg-muted/40 opacity-70'

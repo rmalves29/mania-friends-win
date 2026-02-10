@@ -86,7 +86,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-hero">
       {/* Header */}
       <header className="glass sticky top-0 z-10">
-        <div className="container max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <img src={logo} alt="Mania de Mulher" className="h-10" />
           <div className="flex items-center gap-3">
             {isAdmin && (
@@ -101,7 +101,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container max-w-2xl mx-auto px-6 py-10 space-y-8">
+      <main className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         {/* Welcome */}
         <div className="text-center space-y-2">
           <p className="text-muted-foreground font-body text-sm tracking-wide">Olá, <span className="font-semibold text-foreground">{profile.name.split(' ')[0]}</span> 👋</p>
