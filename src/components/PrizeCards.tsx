@@ -27,7 +27,7 @@ export function PrizeCards() {
     <div className="space-y-5">
       <div className="text-center space-y-1">
         <h3 className="font-display text-xl font-bold text-foreground">🎁 Seus Prêmios</h3>
-        <p className="text-sm font-body text-muted-foreground">Resgate seus cupom para usar nas compras no site!</p>
+        <p className="text-sm font-body text-muted-foreground">Resgate o seu Benefício para usar nas compras no site!</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {rewards.map((reward) => {
