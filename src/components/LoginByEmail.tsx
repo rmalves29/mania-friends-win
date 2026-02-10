@@ -5,7 +5,11 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, LogIn } from 'lucide-react';
 
-export function LoginByEmail() {
+interface LoginByEmailProps {
+  variant?: 'top' | 'default';
+}
+
+export function LoginByEmail({ variant = 'default' }: LoginByEmailProps) {
   const { signIn } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
@@ -35,8 +39,13 @@ export function LoginByEmail() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full text-center text-sm text-muted-foreground font-body hover:text-foreground transition-colors underline underline-offset-4"
+        className={
+          variant === 'top'
+            ? "flex items-center gap-1.5 text-sm font-body font-semibold text-foreground hover:opacity-70 transition-opacity"
+            : "w-full text-center text-sm text-muted-foreground font-body hover:text-foreground transition-colors underline underline-offset-4"
+        }
       >
+        <LogIn className="h-4 w-4" />
         Já tenho cadastro
       </button>
     );

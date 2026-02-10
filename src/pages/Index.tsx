@@ -31,7 +31,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <div className="container max-w-2xl mx-auto px-6 py-12 flex flex-col items-center min-h-screen justify-center">
+      {/* Top login link */}
+      <div className="w-full flex justify-end px-6 pt-4">
+        <LoginByEmail variant="top" />
+      </div>
+
+      <div className="container max-w-2xl mx-auto px-6 py-8 flex flex-col items-center min-h-screen justify-center">
         {/* Logo */}
         <div className="mb-8">
           <img src={logo} alt="Mania de Mulher" className="h-24 md:h-32 mx-auto" />
@@ -82,11 +87,6 @@ const Index = () => {
             </p>
           </div>
           <SignupForm referralCode={ref} />
-        </div>
-
-        {/* Login Section */}
-        <div className="w-full max-w-md mt-8">
-          <LoginByEmail />
         </div>
 
         {/* Trust */}
