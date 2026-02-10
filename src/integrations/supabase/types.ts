@@ -156,6 +156,7 @@ export type Database = {
         Args: { referrer_id: string }
         Returns: undefined
       }
+      lookup_referrer_id: { Args: { _referral_code: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

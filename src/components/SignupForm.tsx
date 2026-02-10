@@ -17,25 +17,11 @@ export function SignupForm({ referralCode }: SignupFormProps) {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '' });
 
-  const linkReferralIfNeeded = async (email: string, refCode?: string) => {
+  const linkReferralIfNeeded = async (userId: string, refCode?: string) => {
     if (!refCode) return;
     try {
-      const { data: referrer } = await (supabase as any)
-        .from('profiles')
-        .select('id')
-        .eq('referral_code', refCode)
-        .maybeSingle();
-      if (!referrer) return;
-
-      const { data: existingProfile } = await (supabase as any)
-        .from('profiles')
-        .select('id, referred_by')
-        .eq('email', email)
-        .maybeSingle();
-      if (existingProfile && !existingProfile.referred_by) {
-        await (supabase as any).from('profiles').update({ referred_by: referrer.id }).eq('id', existingProfile.id);
-        await (supabase as any).rpc('increment_referral_count', { referrer_id: referrer.id });
-      }
+      // Use SECURITY DEFINER RPC to link referral (bypasses RLS safely)
+      await (supabase as any).rpc('link_referral', { _user_id: userId, _referral_code: refCode });
     } catch (err) {
       console.error('Error linking referral on login:', err);
     }
@@ -63,8 +49,12 @@ export function SignupForm({ referralCode }: SignupFormProps) {
           errorMessage.includes('duplicate key') ||
           errorMessage.includes('unique constraint')
         ) {
-          await linkReferralIfNeeded(form.email, referralCode);
           await signIn(form.email, password);
+          // After signing in, link referral using the authenticated user's session
+          const { data: { user: loggedUser } } = await supabase.auth.getUser();
+          if (loggedUser) {
+            await linkReferralIfNeeded(loggedUser.id, referralCode);
+          }
           toast({ title: '👋 Bem-vinda de volta!' });
         } else {
           throw err;
