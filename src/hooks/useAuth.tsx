@@ -71,6 +71,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
+    // Ensure loading is resolved even if onAuthStateChange doesn't fire
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        setUser(null);
+        setProfile(null);
+        setIsAdmin(false);
+        setLoading(false);
+      }
+    });
+
     return () => subscription.unsubscribe();
   }, []);
 
