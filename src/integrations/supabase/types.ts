@@ -133,24 +133,17 @@ export type Database = {
       }
     }
     Views: {
-      profiles_ranking: {
-        Row: {
-          name: string | null
-          referral_count: number | null
-        }
-        Insert: {
-          name?: string | null
-          referral_count?: number | null
-        }
-        Update: {
-          name?: string | null
-          referral_count?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       generate_referral_code: { Args: never; Returns: string }
+      get_ranking: {
+        Args: { limit_count?: number }
+        Returns: {
+          name: string
+          referral_count: number
+        }[]
+      }
       get_total_referrals: { Args: never; Returns: number }
       has_role: {
         Args: {
