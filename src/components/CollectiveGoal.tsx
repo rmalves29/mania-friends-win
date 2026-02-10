@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSettings } from '@/hooks/useSettings';
-import { Trophy, Users, Gift } from 'lucide-react';
+import { Users, Gift } from 'lucide-react';
 
 export function CollectiveGoal() {
   const { data: settings } = useSettings();
@@ -18,61 +18,64 @@ export function CollectiveGoal() {
   const remaining = Math.max(goal - total, 0);
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 shadow-soft space-y-5">
+    <div className="glass rounded-2xl p-8 shadow-elevated space-y-6">
       {/* Badge */}
       <div className="flex justify-center">
-        <span className="inline-flex items-center gap-1.5 bg-progress-bar/10 text-progress-bar px-4 py-1.5 rounded-full text-sm font-bold font-body">
+        <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-semibold font-body tracking-wide">
           {settings?.collective_goal_badge || '🏆 Meta Coletiva'}
         </span>
       </div>
 
       {/* Title & Subtitle */}
-      <div className="text-center space-y-1">
+      <div className="text-center space-y-2">
         <h3 className="font-display text-2xl font-bold text-foreground">
           {settings?.collective_goal_title || 'Desbloqueie o SUPER CUPOM'}
         </h3>
-        <p className="text-sm text-muted-foreground font-body">
+        <p className="text-sm text-muted-foreground font-body leading-relaxed">
           {settings?.collective_goal_subtitle || 'Juntos, vamos atingir 1.000 indicações!'}
         </p>
       </div>
 
       {/* Counter */}
-      <div className="bg-muted/50 rounded-xl p-5 space-y-4">
-        <div className="flex items-center justify-center gap-3">
-          <div className="bg-progress-bar/15 p-2.5 rounded-xl">
-            <Users className="h-6 w-6 text-progress-bar" />
+      <div className="bg-background/60 rounded-2xl p-6 space-y-5">
+        <div className="flex items-center justify-center gap-4">
+          <div className="bg-primary/10 p-3 rounded-xl">
+            <Users className="h-6 w-6 text-primary" />
           </div>
           <div className="text-center">
-            <span className="font-display text-4xl font-bold text-foreground">{total}</span>
-            <p className="text-sm text-muted-foreground font-body">
+            <span className="font-display text-5xl font-bold text-foreground">{total}</span>
+            <p className="text-sm text-muted-foreground font-body mt-0.5">
               de {goal.toLocaleString('pt-BR')} indicações
             </p>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="space-y-1">
-          <div className="relative h-4 bg-progress-track rounded-full overflow-hidden">
+        <div className="space-y-2">
+          <div className="relative h-3 bg-progress-track rounded-full overflow-hidden">
             <div
-              className="h-full bg-progress-bar rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${percentage}%` }}
+              className="h-full rounded-full animate-progress transition-all duration-1000 ease-out"
+              style={{
+                width: `${percentage}%`,
+                background: 'linear-gradient(90deg, hsl(20 20% 37%), hsl(350 30% 70%))',
+              }}
             />
           </div>
-          <p className="text-center text-sm font-bold text-muted-foreground font-body">
+          <p className="text-center text-sm font-semibold text-muted-foreground font-body">
             {percentage.toFixed(1)}%
           </p>
         </div>
 
         {/* Reward Info */}
-        <div className="bg-card border border-border rounded-xl px-4 py-3 flex items-center gap-3">
-          <div className="bg-secondary/20 p-2 rounded-lg shrink-0">
+        <div className="bg-background/80 rounded-xl px-5 py-4 flex items-center gap-4 shadow-soft">
+          <div className="bg-secondary/15 p-2.5 rounded-xl shrink-0">
             <Gift className="h-5 w-5 text-secondary" />
           </div>
           <div>
-            <p className="font-body font-bold text-foreground text-sm">
+            <p className="font-body font-semibold text-foreground text-sm">
               {settings?.collective_goal_reward_text || '50% de desconto em qualquer peça!'}
             </p>
-            <p className="text-xs text-muted-foreground font-body">
+            <p className="text-xs text-muted-foreground font-body mt-0.5">
               Faltam {remaining.toLocaleString('pt-BR')} indicações
             </p>
           </div>
