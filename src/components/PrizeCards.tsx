@@ -26,7 +26,7 @@ export function PrizeCards() {
   return (
     <div className="space-y-5">
       <h3 className="font-display text-xl font-bold text-foreground text-center">🎁 Seus Prêmios</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 gap-4 md:gap-5">
         {rewards.map((reward) => {
           const unlocked = referralCount >= reward.milestone;
           return (
