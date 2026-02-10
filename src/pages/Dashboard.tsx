@@ -9,6 +9,7 @@ import { Ranking } from '@/components/Ranking';
 import { VipGroup } from '@/components/VipGroup';
 import { Button } from '@/components/ui/button';
 import { LogOut, Users, Sparkles } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const Dashboard = () => {
   const { user, profile, loading, signOut, isAdmin } = useAuth();
@@ -32,7 +33,7 @@ const Dashboard = () => {
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="font-display text-xl font-bold text-foreground">Mania de Mulher</h1>
+          <img src={logo} alt="Mania de Mulher" className="h-10" />
           <div className="flex items-center gap-2">
             {isAdmin && (
               <Button variant="outline" size="sm" onClick={() => navigate('/admin')} className="font-body text-xs">
