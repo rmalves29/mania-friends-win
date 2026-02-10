@@ -53,14 +53,14 @@ export function PrizeCards() {
                   )}
                 </div>
                 <span className={`text-xs font-semibold font-body px-3 py-1.5 rounded-full ${
-                  unlocked ? 'bg-badge-unlocked/15 text-badge-unlocked' : 'bg-muted text-muted-foreground'
+                  unlocked ? 'bg-badge-unlocked/15 text-badge-unlocked' : 'bg-muted text-foreground/60'
                 }`}>
                   {reward.milestone} indicações
                 </span>
               </div>
 
               <h4 className="font-display font-bold text-foreground text-lg">{reward.title}</h4>
-              <p className="text-sm font-body mt-1.5 text-muted-foreground leading-relaxed">{reward.description}</p>
+              <p className="text-sm font-body mt-1.5 text-foreground/65 leading-relaxed">{reward.description}</p>
 
               {unlocked && reward.coupon_code && (
                 <div className="mt-4 bg-background/80 rounded-xl px-4 py-3 flex items-center gap-3 shadow-soft">
