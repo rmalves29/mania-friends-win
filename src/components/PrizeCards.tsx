@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Lock, Unlock, Gift } from 'lucide-react';
+import { Lock, Gift } from 'lucide-react';
 
 interface Reward {
   id: string;
@@ -41,7 +41,7 @@ export function PrizeCards() {
               <div className="flex items-start justify-between mb-3">
                 <div className={`p-2 rounded-lg ${unlocked ? 'bg-badge-unlocked/20' : 'bg-badge-locked/20'}`}>
                   {unlocked ? (
-                    <Unlock className="h-5 w-5 text-badge-unlocked" />
+                    <Lock className="h-5 w-5 text-badge-unlocked" />
                   ) : (
                     <Lock className="h-5 w-5 text-badge-locked" />
                   )}
@@ -53,8 +53,8 @@ export function PrizeCards() {
                 </span>
               </div>
 
-              <h4 className="font-display font-bold text-foreground">{reward.title}</h4>
-              <p className="text-sm text-muted-foreground font-body mt-1">{reward.description}</p>
+              <h4 className={`font-display font-bold ${unlocked ? 'text-chocolate' : 'text-foreground'}`}>{reward.title}</h4>
+              <p className={`text-sm font-body mt-1 ${unlocked ? 'text-chocolate' : 'text-muted-foreground'}`}>{reward.description}</p>
 
               {unlocked && reward.coupon_code && (
                 <div className="mt-3 bg-card border border-border rounded-lg px-3 py-2 flex items-center gap-2">
