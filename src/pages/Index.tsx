@@ -5,6 +5,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SignupForm } from '@/components/SignupForm';
 import { AlertTriangle, Sparkles } from 'lucide-react';
+import logo from '@/assets/logo.png';
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -40,9 +41,7 @@ const Index = () => {
 
         {/* Logo / Brand */}
         <div className="text-center mb-6">
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Mania de Mulher
-          </h1>
+          <img src={logo} alt="Mania de Mulher" className="h-24 md:h-32 mx-auto mb-2" />
           <p className="text-muted-foreground font-body">
             Indique amigas e ganhe prêmios exclusivos
           </p>
