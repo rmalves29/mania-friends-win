@@ -72,18 +72,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Use onAuthStateChange as the sole source of truth
     // getSession() can hang due to navigator.locks issues
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       if (currentUser) {
-        await fetchProfile(currentUser.id);
-        await checkAdmin(currentUser.id);
+        // Use setTimeout to avoid deadlock inside onAuthStateChange callback
+        setTimeout(async () => {
+          if (!mounted) return;
+          await fetchProfile(currentUser.id);
+          await checkAdmin(currentUser.id);
+          if (mounted) setLoading(false);
+        }, 0);
       } else {
         setProfile(null);
         setIsAdmin(false);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     // Safety timeout: if onAuthStateChange never fires, stop loading
