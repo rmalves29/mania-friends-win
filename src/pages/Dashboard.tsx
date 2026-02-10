@@ -48,7 +48,7 @@ const Dashboard = () => {
                 Admin
               </Button>
             )}
-            <Button variant="ghost" size="icon" onClick={signOut}>
+            <Button variant="ghost" size="icon" onClick={async () => { await signOut(); navigate('/'); }}>
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
