@@ -37,20 +37,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await (supabase as any)
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-    setProfile(data as Profile | null);
+    try {
+      const { data, error } = await (supabase as any)
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+      if (error) console.error('Profile fetch error:', error);
+      setProfile(data as Profile | null);
+    } catch (err) {
+      console.error('Profile fetch exception:', err);
+    }
   };
 
   const checkAdmin = async (userId: string) => {
-    const { data } = await (supabase as any).rpc('has_role', {
-      _user_id: userId,
-      _role: 'admin'
-    });
-    setIsAdmin(!!data);
+    try {
+      const { data, error } = await (supabase as any).rpc('has_role', {
+        _user_id: userId,
+        _role: 'admin'
+      });
+      if (error) console.error('Admin check error:', error);
+      setIsAdmin(!!data);
+    } catch (err) {
+      console.error('Admin check exception:', err);
+    }
   };
 
   const refreshProfile = async () => {
@@ -79,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Safety timeout: if onAuthStateChange never fires, stop loading
     const timeout = setTimeout(() => {
       if (mounted) setLoading(false);
-    }, 5000);
+    }, 3000);
 
     return () => {
       mounted = false;
