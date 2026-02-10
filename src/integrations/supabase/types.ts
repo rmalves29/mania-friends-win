@@ -156,6 +156,10 @@ export type Database = {
         Args: { referrer_id: string }
         Returns: undefined
       }
+      link_referral: {
+        Args: { _referral_code: string; _user_id: string }
+        Returns: boolean
+      }
       lookup_referrer_id: { Args: { _referral_code: string }; Returns: string }
     }
     Enums: {
