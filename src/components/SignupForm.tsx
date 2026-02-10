@@ -56,7 +56,13 @@ export function SignupForm({ referralCode }: SignupFormProps) {
         toast({ title: '🎉 Bem-vinda!', description: 'Sua conta foi criada com sucesso!' });
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : '';
-        if (errorMessage.includes('already registered') || errorMessage.includes('already exists')) {
+        // Handle all "user exists" variations: auth error or profile duplicate key
+        if (
+          errorMessage.includes('already registered') ||
+          errorMessage.includes('already exists') ||
+          errorMessage.includes('duplicate key') ||
+          errorMessage.includes('unique constraint')
+        ) {
           await linkReferralIfNeeded(form.email, referralCode);
           await signIn(form.email, password);
           toast({ title: '👋 Bem-vinda de volta!' });
