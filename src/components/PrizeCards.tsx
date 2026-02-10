@@ -60,9 +60,11 @@ export function PrizeCards() {
               </div>
 
               <h4 className="font-display font-bold text-foreground text-lg">
-                {unlocked ? '✅ Cupom Desbloqueado' : reward.title}
+                {unlocked ? 'Cupom Desbloqueado' : reward.title}
               </h4>
-              <p className="text-sm font-body mt-1.5 text-foreground/65 leading-relaxed">{reward.description}</p>
+              {!unlocked && (
+                <p className="text-sm font-body mt-1.5 text-foreground/65 leading-relaxed">{reward.description}</p>
+              )}
 
               {unlocked && reward.coupon_code && (
                 <div className="mt-4 bg-background/80 rounded-xl px-4 py-3 flex items-center gap-3 shadow-soft">
