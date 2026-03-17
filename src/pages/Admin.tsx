@@ -42,7 +42,7 @@ const Admin = () => {
     const [settingsRes, rewardsRes, usersRes] = await Promise.all([
       sb.from('site_settings').select('key, value'),
       sb.from('rewards').select('*').order('sort_order'),
-      sb.from('profiles').select('name, email, referral_count, whatsapp, created_at').order('referral_count', { ascending: false }),
+      sb.from('profiles').select('id, name, email, referral_count, whatsapp, created_at').order('referral_count', { ascending: false }),
     ]);
 
     const s: Record<string, string> = {};
