@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Save, Loader2, Users, Settings, Gift } from 'lucide-react';
+import AdminUsers, { type UserRow } from '@/components/AdminUsers';
 
 interface Reward {
   id: string;
@@ -14,14 +15,6 @@ interface Reward {
   title: string;
   description: string | null;
   coupon_code: string | null;
-}
-
-interface UserRow {
-  name: string;
-  email: string;
-  referral_count: number;
-  whatsapp: string | null;
-  created_at: string;
 }
 
 const Admin = () => {
@@ -49,7 +42,7 @@ const Admin = () => {
     const [settingsRes, rewardsRes, usersRes] = await Promise.all([
       sb.from('site_settings').select('key, value'),
       sb.from('rewards').select('*').order('sort_order'),
-      sb.from('profiles').select('name, email, referral_count, whatsapp, created_at').order('referral_count', { ascending: false }),
+      sb.from('profiles').select('id, name, email, referral_count, whatsapp, created_at').order('referral_count', { ascending: false }),
     ]);
 
     const s: Record<string, string> = {};
@@ -209,24 +202,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'users' && (
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <div className="px-4 py-3 bg-muted border-b border-border font-body text-sm font-bold">
-              Total: {users.length} usuários
-            </div>
-            <div className="divide-y divide-border max-h-[60vh] overflow-y-auto">
-              {users.map((u, i) => (
-                <div key={i} className="px-4 py-3 flex items-center justify-between">
-                  <div>
-                    <p className="font-body font-bold text-foreground text-sm">{u.name}</p>
-                    <p className="text-xs text-muted-foreground font-body">{u.email} • {u.whatsapp}</p>
-                  </div>
-                  <span className="bg-secondary/20 text-secondary-foreground font-display font-bold px-3 py-1 rounded-full text-sm">
-                    {u.referral_count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <AdminUsers users={users} onRefresh={loadData} />
         )}
       </div>
     </div>
