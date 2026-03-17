@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Save, Loader2, Users, Settings, Gift } from 'lucide-react';
+import AdminUsers, { type UserRow } from '@/components/AdminUsers';
 
 interface Reward {
   id: string;
@@ -14,14 +15,6 @@ interface Reward {
   title: string;
   description: string | null;
   coupon_code: string | null;
-}
-
-interface UserRow {
-  name: string;
-  email: string;
-  referral_count: number;
-  whatsapp: string | null;
-  created_at: string;
 }
 
 const Admin = () => {
