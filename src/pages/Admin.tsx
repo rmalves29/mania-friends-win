@@ -202,24 +202,7 @@ const Admin = () => {
         )}
 
         {activeTab === 'users' && (
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <div className="px-4 py-3 bg-muted border-b border-border font-body text-sm font-bold">
-              Total: {users.length} usuários
-            </div>
-            <div className="divide-y divide-border max-h-[60vh] overflow-y-auto">
-              {users.map((u, i) => (
-                <div key={i} className="px-4 py-3 flex items-center justify-between">
-                  <div>
-                    <p className="font-body font-bold text-foreground text-sm">{u.name}</p>
-                    <p className="text-xs text-muted-foreground font-body">{u.email} • {u.whatsapp}</p>
-                  </div>
-                  <span className="bg-secondary/20 text-secondary-foreground font-display font-bold px-3 py-1 rounded-full text-sm">
-                    {u.referral_count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <AdminUsers users={users} onRefresh={loadData} />
         )}
       </div>
     </div>
