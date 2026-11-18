@@ -4,25 +4,46 @@ interface CountdownTimerProps {
   targetDate: string;
 }
 
+// Dígito que desliza com blur só quando o valor muda (inspirado no "Animate Digits" do 21st.dev)
+function Digit({ value }: { value: string }) {
+  return (
+    <span className="relative inline-block w-[0.62em] overflow-hidden text-center">
+      <span key={value} className="inline-block animate-in fade-in slide-in-from-top-3 duration-300">
+        {value}
+      </span>
+    </span>
+  );
+}
+
 export function CountdownTimer({ targetDate }: CountdownTimerProps) {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const calculate = () => {
+    const diff = new Date(targetDate).getTime() - Date.now();
+    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
+    return {
+      days: Math.floor(diff / 86400000),
+      hours: Math.floor((diff / 3600000) % 24),
+      minutes: Math.floor((diff / 60000) % 60),
+      seconds: Math.floor((diff / 1000) % 60),
+      ended: false,
+    };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculate);
 
   useEffect(() => {
-    const calculate = () => {
-      const diff = new Date(targetDate).getTime() - Date.now();
-      if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      return {
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      };
-    };
-
     setTimeLeft(calculate());
     const timer = setInterval(() => setTimeLeft(calculate()), 1000);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetDate]);
+
+  if (timeLeft.ended) {
+    return (
+      <div className="rounded-full bg-urgency/10 px-6 py-3 font-body font-semibold text-urgency">
+        Evento encerrado
+      </div>
+    );
+  }
 
   const units = [
     { label: 'Dias', value: timeLeft.days },
@@ -30,20 +51,32 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
     { label: 'Min', value: timeLeft.minutes },
     { label: 'Seg', value: timeLeft.seconds },
   ];
+  const urgent = timeLeft.days === 0;
 
   return (
-    <div className="flex gap-4 md:gap-5 justify-center">
-      {units.map((unit) => (
-        <div key={unit.label} className="flex flex-col items-center">
-          <div
-            className="glass text-foreground font-display text-3xl md:text-4xl font-bold rounded-2xl flex items-center justify-center shadow-elevated"
-            style={{ width: '4.5rem', height: '4.5rem' }}
-          >
-            {String(unit.value).padStart(2, '0')}
+    <div className="flex items-start justify-center gap-2 sm:gap-4" role="timer" aria-live="off">
+      {units.map((unit, i) => (
+        <div key={unit.label} className="flex items-start gap-2 sm:gap-4">
+          <div className="flex flex-col items-center">
+            <div
+              className={`glass flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl font-display text-3xl sm:text-4xl font-bold tabular-nums shadow-elevated ${
+                urgent ? 'text-urgency' : 'text-foreground'
+              }`}
+            >
+              {String(unit.value)
+                .padStart(2, '0')
+                .split('')
+                .map((d, idx) => (
+                  <Digit key={idx} value={d} />
+                ))}
+            </div>
+            <span className="mt-2 text-[10px] font-body font-semibold uppercase tracking-[0.15em] text-muted-foreground">
+              {unit.label}
+            </span>
           </div>
-          <span className="text-[10px] mt-2.5 text-muted-foreground font-body uppercase tracking-[0.15em] font-semibold">
-            {unit.label}
-          </span>
+          {i < units.length - 1 && (
+            <span className="mt-4 sm:mt-6 font-display text-2xl text-secondary animate-pulse-slow">:</span>
+          )}
         </div>
       ))}
     </div>

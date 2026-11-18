@@ -2,7 +2,14 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Share2 } from 'lucide-react';
+import { Copy, Check, Link2, Share2, UserPlus, Gift, MessageCircle } from 'lucide-react';
+
+// Adaptado do componente "Referral Card" (21st.dev) para a identidade Mania de Mulher
+const steps = [
+  { icon: Share2, text: <>Copie seu link e <strong className="text-foreground">envie para suas amigas</strong></> },
+  { icon: UserPlus, text: <>Ela se cadastra pelo seu link e <strong className="text-foreground">conta como indicação</strong></> },
+  { icon: Gift, text: <>Você <strong className="text-foreground">desbloqueia cupons</strong> a cada meta batida</> },
+];
 
 export function ReferralLink() {
   const { profile } = useAuth();
@@ -14,41 +21,74 @@ export function ReferralLink() {
   const link = `${window.location.origin}?ref=${profile.referral_code}`;
 
   const copyLink = async () => {
-    await navigator.clipboard.writeText(link);
-    setCopied(true);
-    toast({ title: '✅ Link copiado!' });
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      toast({ title: '✅ Link copiado!' });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: 'Não foi possível copiar', description: 'Segure o link e copie manualmente.', variant: 'destructive' });
+    }
   };
 
   const shareWhatsApp = () => {
-    const text = encodeURIComponent(`🎁 Vem ganhar prêmios incríveis na Mania de Mulher! Use meu link: ${link}`);
+    const text = encodeURIComponent(`🎁 Vem ganhar presentes incríveis na Mania de Mulher! Use meu link: ${link}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   return (
-    <div className="glass rounded-2xl p-7 shadow-elevated text-center hover-glow transition-all duration-300">
-      <h3 className="font-display text-2xl font-bold mb-1.5 text-foreground">
-        Convide amigos e <span className="text-secondary italic">Desbloqueie Cupons</span>
-      </h3>
-      <p className="text-sm text-muted-foreground font-body mb-6 leading-relaxed">
-        Compartilhe seu link e desbloqueie cupons exclusivos!
-      </p>
+    <section className="relative overflow-hidden glass rounded-3xl p-6 sm:p-8 shadow-elevated animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Decoração */}
+      <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-secondary/25 blur-3xl" />
+      <Gift className="pointer-events-none absolute right-6 top-6 h-16 w-16 text-secondary/30 animate-float" />
 
-      <div className="flex gap-3 mb-5">
-        <div className="flex-1 bg-background/70 rounded-xl px-4 py-3.5 text-sm font-body text-muted-foreground truncate border border-border/50">
-          {link}
+      <div className="relative">
+        <span className="inline-block rounded-full bg-secondary/20 px-3 py-1 text-xs font-semibold font-body uppercase tracking-wider text-foreground">
+          Indique e ganhe
+        </span>
+        <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-foreground">
+          Convide amigas e <span className="italic text-primary">desbloqueie cupons</span>
+        </h3>
+
+        <ul className="mt-5 space-y-3">
+          {steps.map(({ icon: Icon, text }, i) => (
+            <li
+              key={i}
+              className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 fill-mode-both"
+              style={{ animationDelay: `${150 + i * 120}ms`, animationDuration: '400ms' }}
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <Icon className="h-4 w-4" />
+              </span>
+              <span className="text-sm font-body text-muted-foreground">{text}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-6 mb-2 text-sm font-semibold font-body text-foreground">Seu link de indicação</p>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-xl border border-border/60 bg-background/80 px-3">
+            <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <p className="truncate text-sm font-body text-muted-foreground">{link}</p>
+          </div>
+          <Button
+            onClick={copyLink}
+            className="h-12 shrink-0 rounded-xl px-6 font-body font-semibold shadow-soft"
+          >
+            <span key={copied ? 'ok' : 'copy'} className="flex items-center gap-2 animate-in fade-in zoom-in-95 duration-200">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              {copied ? 'Copiado!' : 'Copiar link'}
+            </span>
+          </Button>
         </div>
+
         <Button
-          onClick={copyLink}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-body shrink-0 px-6 rounded-xl shadow-soft transition-all duration-300 hover:shadow-elevated"
+          onClick={shareWhatsApp}
+          className="mt-3 h-12 w-full rounded-xl font-body font-semibold text-white bg-[#25D366] hover:bg-[#1fb957] shadow-soft"
         >
-          <Copy className="mr-2 h-4 w-4" /> {copied ? 'Copiado!' : 'Copiar'}
+          <MessageCircle className="mr-2 h-5 w-5" /> Enviar no WhatsApp
         </Button>
       </div>
-
-      <p className="text-xs text-muted-foreground font-body tracking-wide">
-        Compartilhe nas redes sociais ou envie diretamente para suas amigas
-      </p>
-    </div>
+    </section>
   );
 }

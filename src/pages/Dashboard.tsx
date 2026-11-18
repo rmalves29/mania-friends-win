@@ -8,8 +8,9 @@ import { ReferralLink } from '@/components/ReferralLink';
 import { PrizeCards } from '@/components/PrizeCards';
 import { Ranking } from '@/components/Ranking';
 import { VipGroup } from '@/components/VipGroup';
+import { NextPrize } from '@/components/NextPrize';
 import { Button } from '@/components/ui/button';
-import { LogOut, Users, Sparkles } from 'lucide-react';
+import { LogOut, Sparkles } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
 const Dashboard = () => {
@@ -101,24 +102,17 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {/* Welcome */}
-        <div className="text-center space-y-2">
-          <p className="text-muted-foreground font-body text-sm tracking-wide">Olá, <span className="font-semibold text-foreground">{profile.name.split(' ')[0]}</span> 👋</p>
-          <div className="flex items-center justify-center gap-3">
-            <div className="p-2 rounded-full bg-secondary/15">
-              <Users className="h-5 w-5 text-secondary" />
-            </div>
-            <span className="font-display text-4xl font-bold text-foreground">{profile.referral_count}</span>
-            <span className="text-sm text-muted-foreground font-body">indicações</span>
+      <main className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
+        <NextPrize />
+        <ReferralLink />
+        <PrizeCards />
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+          <Ranking />
+          <div className="space-y-8">
+            <CollectiveGoal />
+            <VipGroup />
           </div>
         </div>
-
-        <ReferralLink />
-        <VipGroup />
-        <PrizeCards />
-        <Ranking />
-        <CollectiveGoal />
       </main>
 
       {/* Footer */}
