@@ -59,27 +59,29 @@ const Index = () => {
           {isFriend ? 'VOCÊ FOI CONVIDADA!' : 'INDIQUE E GANHE!'}
         </h1>
 
-        {/* Offer banner */}
-        <div className="bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full mb-5 text-center tracking-wider shadow-elevated">
-          {isFriend ? 'GRUPO VIP MANIA DE MULHER' : 'INDIQUE AMIGAS E GANHE PRESENTES'}
-        </div>
+        {!isFriend && (
+          <>
+            {/* Offer banner */}
+            <div className="bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full mb-5 text-center tracking-wider shadow-elevated">
+              INDIQUE AMIGAS E GANHE PRESENTES
+            </div>
 
-        {/* Subtitle */}
-        <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-8 leading-relaxed">
-          {isFriend
-            ? 'Ofertas exclusivas, lançamentos e cupons direto no seu WhatsApp.'
-            : 'Indique amigas para o nosso Grupo VIP do WhatsApp e desbloqueie cupons.'}
-        </p>
+            {/* Subtitle */}
+            <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-8 leading-relaxed">
+              Indique amigas para o nosso Grupo VIP do WhatsApp e desbloqueie cupons.
+            </p>
 
-        {/* Countdown label */}
-        <p className="text-center text-xs md:text-sm text-muted-foreground font-body font-semibold mb-4 uppercase tracking-[0.2em]">
-          O site fecha em
-        </p>
+            {/* Countdown label */}
+            <p className="text-center text-xs md:text-sm text-muted-foreground font-body font-semibold mb-4 uppercase tracking-[0.2em]">
+              O site fecha em
+            </p>
 
-        {/* Countdown */}
-        <div className="mb-12">
-          <CountdownTimer targetDate={settings?.countdown_end || '2026-03-01T23:59:59'} />
-        </div>
+            {/* Countdown */}
+            <div className="mb-12">
+              <CountdownTimer targetDate={settings?.countdown_end || '2026-03-01T23:59:59'} />
+            </div>
+          </>
+        )}
 
         {/* Formulário */}
         <div className="w-full max-w-md glass rounded-2xl p-8 md:p-10 shadow-elevated">
