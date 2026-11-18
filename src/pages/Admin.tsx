@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Loader2, Users, Settings, Gift, Trophy } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Users, Settings, Gift, Trophy, Plus, Trash2 } from 'lucide-react';
 import AdminUsers, { type UserRow } from '@/components/AdminUsers';
 import AdminReferrals from '@/components/AdminReferrals';
 
@@ -80,9 +80,50 @@ const Admin = () => {
         milestone: reward.milestone,
       }).eq('id', reward.id);
       if (error) throw error;
-      toast({ title: '✅ Prêmio atualizado!' });
+      toast({ title: '✅ Presente atualizado!' });
     } catch {
       toast({ title: 'Erro ao salvar', variant: 'destructive' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const addReward = async () => {
+    setSaving(true);
+    try {
+      const nextMilestone = rewards.length ? Math.max(...rewards.map((r) => r.milestone)) + 5 : 3;
+      const { data, error } = await (supabase as any)
+        .from('rewards')
+        .insert({
+          title: 'Novo presente',
+          description: '',
+          coupon_code: '',
+          milestone: nextMilestone,
+          sort_order: rewards.length + 1,
+          is_active: true,
+        })
+        .select('*')
+        .single();
+      if (error) throw error;
+      setRewards((prev) => [...prev, data as Reward]);
+      toast({ title: '🎁 Presente criado!', description: 'Preencha os dados e clique em Salvar.' });
+    } catch {
+      toast({ title: 'Erro ao criar presente', variant: 'destructive' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const deleteReward = async (reward: Reward) => {
+    if (!window.confirm(`Excluir o presente "${reward.title}"?`)) return;
+    setSaving(true);
+    try {
+      const { error } = await (supabase as any).from('rewards').delete().eq('id', reward.id);
+      if (error) throw error;
+      setRewards((prev) => prev.filter((r) => r.id !== reward.id));
+      toast({ title: 'Presente excluído' });
+    } catch {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
     } finally {
       setSaving(false);
     }
@@ -161,11 +202,17 @@ const Admin = () => {
 
         {activeTab === 'rewards' && (
           <div className="space-y-4">
+            <Button onClick={addReward} disabled={saving} className="w-full font-body" variant="outline">
+              <Plus className="mr-2 h-4 w-4" /> Adicionar presente
+            </Button>
+            {rewards.length === 0 && (
+              <p className="text-center text-sm text-muted-foreground font-body py-4">Nenhum presente cadastrado.</p>
+            )}
             {rewards.map((reward, i) => (
               <div key={reward.id} className="bg-card rounded-xl p-4 border border-border space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label className="font-body text-xs">Milestone</Label>
+                    <Label className="font-body text-xs">Meta (amigas que entraram no grupo)</Label>
                     <Input type="number" value={reward.milestone} onChange={e => {
                       const updated = [...rewards];
                       updated[i] = { ...updated[i], milestone: parseInt(e.target.value) || 0 };
@@ -197,9 +244,14 @@ const Admin = () => {
                     setRewards(updated);
                   }} className="bg-background font-body" />
                 </div>
-                <Button onClick={() => saveReward(reward)} disabled={saving} className="w-full bg-secondary text-secondary-foreground font-body" size="sm">
-                  <Save className="mr-2 h-4 w-4" /> Salvar Prêmio
-                </Button>
+                <div className="flex gap-2">
+                  <Button onClick={() => saveReward(reward)} disabled={saving} className="flex-1 bg-secondary text-secondary-foreground font-body" size="sm">
+                    <Save className="mr-2 h-4 w-4" /> Salvar presente
+                  </Button>
+                  <Button onClick={() => deleteReward(reward)} disabled={saving} variant="outline" size="sm" className="font-body text-destructive" aria-label="Excluir presente">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
