@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_secrets: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -58,6 +73,53 @@ export type Database = {
           zipcode?: string | null
         }
         Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          gender: string
+          id: string
+          joined_at: string | null
+          left_at: string | null
+          name: string
+          referrer_id: string
+          reject_reason: string | null
+          status: string
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          gender?: string
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          name: string
+          referrer_id: string
+          reject_reason?: string | null
+          status?: string
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          gender?: string
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          name?: string
+          referrer_id?: string
+          reject_reason?: string | null
+          status?: string
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rewards: {
         Row: {
@@ -136,7 +198,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_ranking: {
+        Args: never
+        Returns: {
+          id: string
+          joined: number
+          name: string
+          pending: number
+          rejected: number
+          whatsapp: string
+        }[]
+      }
       generate_referral_code: { Args: never; Returns: string }
+      get_my_referral_stats: { Args: never; Returns: Json }
+      get_my_rewards: {
+        Args: never
+        Returns: {
+          coupon_code: string
+          description: string
+          id: string
+          milestone: number
+          title: string
+          unlocked: boolean
+        }[]
+      }
       get_ranking: {
         Args: { limit_count?: number }
         Returns: {
@@ -161,6 +246,20 @@ export type Database = {
         Returns: boolean
       }
       lookup_referrer_id: { Args: { _referral_code: string }; Returns: string }
+      mark_group_event: {
+        Args: { _event?: string; _phone: string }
+        Returns: Json
+      }
+      normalize_br_phone: { Args: { _raw: string }; Returns: string }
+      register_referral: {
+        Args: {
+          _gender?: string
+          _name: string
+          _referral_code: string
+          _whatsapp: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
