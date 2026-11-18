@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Busca o perfil; se a conta existe mas o perfil sumiu, recria automaticamente
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await (supabase as any)
@@ -44,7 +45,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('id', userId)
         .maybeSingle();
       if (error) console.error('Profile fetch error:', error);
-      setProfile(data as Profile | null);
+      if (data) {
+        setProfile(data as Profile);
+        return;
+      }
+      if (error) {
+        setProfile(null);
+        return;
+      }
+
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser || authUser.id !== userId) {
+        setProfile(null);
+        return;
+      }
+      const meta = (authUser.user_metadata || {}) as Record<string, string>;
+      const email = authUser.email || '';
+      const { data: refCode } = await (supabase as any).rpc('generate_referral_code');
+      const { data: created, error: insertError } = await (supabase as any)
+        .from('profiles')
+        .insert({
+          id: userId,
+          name: meta.name || email.split('@')[0],
+          email,
+          whatsapp: meta.whatsapp || null,
+          referral_code: refCode || email.split('@')[0].toUpperCase().slice(0, 6) + Math.floor(Math.random() * 1000),
+        })
+        .select('*')
+        .maybeSingle();
+      if (insertError) console.error('Profile auto-create error:', insertError);
+      setProfile((created as Profile) || null);
     } catch (err) {
       console.error('Profile fetch exception:', err);
     }
@@ -107,7 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: window.location.origin }
+      options: { emailRedirectTo: window.location.origin, data: { name, whatsapp } }
     });
     if (authError) throw authError;
     if (!authData.user) throw new Error('Erro ao criar conta');

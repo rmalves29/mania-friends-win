@@ -75,10 +75,25 @@ const Dashboard = () => {
   }
 
   if (!profile) {
+    const gaveUp = profileRetries >= 5;
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Sparkles className="h-8 w-8 animate-pulse-slow text-secondary" />
-        <p className="text-muted-foreground font-body ml-3">Carregando perfil...</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
+        <div className="flex items-center">
+          <Sparkles className={`h-8 w-8 text-secondary ${gaveUp ? '' : 'animate-pulse-slow'}`} />
+          <p className="text-muted-foreground font-body ml-3">
+            {gaveUp ? 'Não conseguimos carregar seu perfil.' : 'Carregando perfil...'}
+          </p>
+        </div>
+        {gaveUp && (
+          <div className="flex gap-3">
+            <Button onClick={() => { setProfileRetries(0); refreshProfile(); }} className="rounded-xl font-body">
+              Tentar de novo
+            </Button>
+            <Button variant="outline" onClick={async () => { await signOut(); navigate('/'); }} className="rounded-xl font-body">
+              Sair
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
