@@ -59,12 +59,13 @@ const Index = () => {
           {isFriend ? 'VOCÊ FOI CONVIDADA!' : 'INDIQUE E GANHE!'}
         </h1>
 
+        {/* Offer banner */}
+        <div className={`bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full text-center tracking-wider shadow-elevated ${isFriend ? 'mb-10' : 'mb-5'}`}>
+          {isFriend ? 'GRUPO VIP MANIA DE MULHER' : 'INDIQUE AMIGAS E GANHE PRESENTES'}
+        </div>
+
         {!isFriend && (
           <>
-            {/* Offer banner */}
-            <div className="bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full mb-5 text-center tracking-wider shadow-elevated">
-              INDIQUE AMIGAS E GANHE PRESENTES
-            </div>
 
             {/* Subtitle */}
             <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-8 leading-relaxed">
