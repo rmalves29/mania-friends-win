@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { isValidPhone, maskPhone } from '@/lib/referral';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,21 +11,11 @@ interface SignupFormProps {
   referralCode?: string;
 }
 
-export function SignupForm({ referralCode }: SignupFormProps) {
+export function SignupForm(_props: SignupFormProps = {}) {
   const { signUp, signIn } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '' });
-
-  const linkReferralIfNeeded = async (userId: string, refCode?: string) => {
-    if (!refCode) return;
-    try {
-      // Use SECURITY DEFINER RPC to link referral (bypasses RLS safely)
-      await (supabase as any).rpc('link_referral', { _user_id: userId, _referral_code: refCode });
-    } catch (err) {
-      console.error('Error linking referral on login:', err);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,12 +23,16 @@ export function SignupForm({ referralCode }: SignupFormProps) {
       toast({ title: 'Preencha todos os campos', variant: 'destructive' });
       return;
     }
+    if (!isValidPhone(form.whatsapp)) {
+      toast({ title: 'WhatsApp inválido', description: 'Use DDD + número, ex.: (31) 99999-9999', variant: 'destructive' });
+      return;
+    }
 
     setLoading(true);
     try {
       const password = form.email + '_mgm_2026';
       try {
-        await signUp(form.email, password, form.name, form.whatsapp, referralCode);
+        await signUp(form.email, password, form.name, form.whatsapp);
         toast({ title: '🎉 Bem-vinda!', description: 'Sua conta foi criada com sucesso!' });
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : '';
@@ -50,11 +44,6 @@ export function SignupForm({ referralCode }: SignupFormProps) {
           errorMessage.includes('unique constraint')
         ) {
           await signIn(form.email, password);
-          // After signing in, link referral using the authenticated user's session
-          const { data: { user: loggedUser } } = await supabase.auth.getUser();
-          if (loggedUser) {
-            await linkReferralIfNeeded(loggedUser.id, referralCode);
-          }
           toast({ title: '👋 Bem-vinda de volta!' });
         } else {
           throw err;
@@ -97,7 +86,8 @@ export function SignupForm({ referralCode }: SignupFormProps) {
           id="whatsapp"
           placeholder="(00) 00000-0000"
           value={form.whatsapp}
-          onChange={(e) => setForm(prev => ({ ...prev, whatsapp: e.target.value }))}
+          onChange={(e) => setForm(prev => ({ ...prev, whatsapp: maskPhone(e.target.value) }))}
+          inputMode="tel"
           className="bg-background/70 border-border/50 h-12 font-body rounded-xl focus:ring-2 focus:ring-secondary/30 transition-all"
         />
       </div>

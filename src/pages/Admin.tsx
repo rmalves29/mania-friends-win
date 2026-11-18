@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Loader2, Users, Settings, Gift } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Users, Settings, Gift, Trophy } from 'lucide-react';
 import AdminUsers, { type UserRow } from '@/components/AdminUsers';
+import AdminReferrals from '@/components/AdminReferrals';
 
 interface Reward {
   id: string;
@@ -25,7 +26,7 @@ const Admin = () => {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [users, setUsers] = useState<UserRow[]>([]);
-  const [activeTab, setActiveTab] = useState<'settings' | 'rewards' | 'users'>('settings');
+  const [activeTab, setActiveTab] = useState<'referrals' | 'settings' | 'rewards' | 'users'>('referrals');
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -96,15 +97,16 @@ const Admin = () => {
   }
 
   const tabs = [
+    { id: 'referrals' as const, label: 'Indicações', icon: Trophy },
     { id: 'settings' as const, label: 'Configurações', icon: Settings },
-    { id: 'rewards' as const, label: 'Prêmios', icon: Gift },
+    { id: 'rewards' as const, label: 'Presentes', icon: Gift },
     { id: 'users' as const, label: 'Usuários', icon: Users },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center gap-4">
+        <div className="container max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -112,8 +114,8 @@ const Admin = () => {
         </div>
       </header>
 
-      <div className="container max-w-3xl mx-auto px-4 py-6">
-        <div className="flex gap-2 mb-6">
+      <div className="container max-w-4xl mx-auto px-4 py-6">
+        <div className="flex flex-wrap gap-2 mb-6">
           {tabs.map(tab => (
             <Button
               key={tab.id}
@@ -125,6 +127,8 @@ const Admin = () => {
             </Button>
           ))}
         </div>
+
+        {activeTab === 'referrals' && <AdminReferrals />}
 
         {activeTab === 'settings' && (
           <div className="space-y-4">

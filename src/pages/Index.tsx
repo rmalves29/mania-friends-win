@@ -5,6 +5,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { SignupForm } from '@/components/SignupForm';
 import { LoginByEmail } from '@/components/LoginByEmail';
+import { FriendSignup } from '@/components/FriendSignup';
 import { Sparkles } from 'lucide-react';
 import logo from '@/assets/logo.png';
 
@@ -15,11 +16,13 @@ const Index = () => {
   const navigate = useNavigate();
   const [ref] = useState(searchParams.get('ref') || '');
 
+  const isFriend = !!ref;
+
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && !isFriend) {
       navigate('/dashboard');
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, isFriend]);
 
   if (loading) {
     return (
@@ -32,8 +35,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-hero">
       {/* Top login link */}
-      <div className="w-full flex justify-end px-6 pt-4">
-        <LoginByEmail variant="top" />
+      <div className="w-full flex justify-end px-6 pt-4 min-h-[2.5rem]">
+        {!isFriend && <LoginByEmail variant="top" />}
       </div>
 
       <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col items-center min-h-[90vh] justify-center">
@@ -53,17 +56,19 @@ const Index = () => {
 
         {/* Headline */}
         <h1 className="font-display text-4xl md:text-6xl font-extrabold italic text-foreground text-center mb-5 leading-tight">
-          INDIQUE E GANHE!
+          {isFriend ? 'VOCÊ FOI CONVIDADA!' : 'INDIQUE E GANHE!'}
         </h1>
 
         {/* Offer banner */}
         <div className="bg-foreground text-background font-body font-bold text-base md:text-xl px-8 md:px-12 py-3.5 rounded-full mb-5 text-center tracking-wider shadow-elevated">
-          INDIQUE AMIGAS E GANHE PRÊMIOS
+          {isFriend ? 'GRUPO VIP MANIA DE MULHER' : 'INDIQUE AMIGAS E GANHE PRESENTES'}
         </div>
 
         {/* Subtitle */}
         <p className="text-muted-foreground font-body text-sm md:text-base text-center mb-8 leading-relaxed">
-          Somente para quem estiver no grupo vip do WhatsApp!
+          {isFriend
+            ? 'Ofertas exclusivas, lançamentos e cupons direto no seu WhatsApp.'
+            : 'Indique amigas para o nosso Grupo VIP do WhatsApp e desbloqueie cupons.'}
         </p>
 
         {/* Countdown label */}
@@ -76,17 +81,21 @@ const Index = () => {
           <CountdownTimer targetDate={settings?.countdown_end || '2026-03-01T23:59:59'} />
         </div>
 
-        {/* Signup Form */}
+        {/* Formulário */}
         <div className="w-full max-w-md glass rounded-2xl p-8 md:p-10 shadow-elevated">
-          <div className="text-center mb-7">
-            <h2 className="font-display text-xl font-bold text-foreground">
-              Garanta seu lugar agora
-            </h2>
-            <p className="text-sm text-muted-foreground font-body mt-1.5">
-              Preencha seus dados e comece a ganhar
-            </p>
-          </div>
-          <SignupForm referralCode={ref} />
+          {isFriend ? (
+            <FriendSignup referralCode={ref} />
+          ) : (
+            <>
+              <div className="text-center mb-7">
+                <h2 className="font-display text-xl font-bold text-foreground">Quero participar</h2>
+                <p className="text-sm text-muted-foreground font-body mt-1.5">
+                  Cadastre-se para receber o seu link de indicação
+                </p>
+              </div>
+              <SignupForm />
+            </>
+          )}
         </div>
 
         {/* Trust */}

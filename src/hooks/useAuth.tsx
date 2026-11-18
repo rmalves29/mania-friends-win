@@ -144,26 +144,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: refCode } = await (supabase as any).rpc('generate_referral_code');
 
-    // Use SECURITY DEFINER RPC to look up referrer (bypasses RLS)
-    let referrerId: string | null = null;
-    if (referredBy) {
-      const { data: rid } = await (supabase as any).rpc('lookup_referrer_id', { _referral_code: referredBy });
-      if (rid) referrerId = rid;
-    }
-
     const { error: profileError } = await (supabase as any).from('profiles').insert({
       id: authData.user.id,
       name,
       email,
       whatsapp,
       referral_code: refCode || email.split('@')[0].toUpperCase().slice(0, 6),
-      referred_by: referrerId,
     });
     if (profileError) throw profileError;
-
-    if (referrerId) {
-      await (supabase as any).rpc('increment_referral_count', { referrer_id: referrerId });
-    }
 
     // Fetch profile immediately after insert to avoid race condition
     await fetchProfile(authData.user.id);

@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
-import { CollectiveGoal } from '@/components/CollectiveGoal';
 import { ReferralLink } from '@/components/ReferralLink';
 import { PrizeCards } from '@/components/PrizeCards';
-import { Ranking } from '@/components/Ranking';
 import { VipGroup } from '@/components/VipGroup';
 import { NextPrize } from '@/components/NextPrize';
+import { HowItWorks } from '@/components/HowItWorks';
+import { MyReferrals } from '@/components/MyReferrals';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { LogOut, Sparkles } from 'lucide-react';
 import logo from '@/assets/logo.png';
@@ -17,6 +18,14 @@ const Dashboard = () => {
   const { user, profile, loading, signOut, isAdmin, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [profileRetries, setProfileRetries] = useState(0);
+  const queryClient = useQueryClient();
+
+  const refreshAll = useCallback(() => {
+    refreshProfile();
+    queryClient.invalidateQueries({ queryKey: ['referral-stats'] });
+    queryClient.invalidateQueries({ queryKey: ['my-rewards'] });
+    queryClient.invalidateQueries({ queryKey: ['my-referrals'] });
+  }, [refreshProfile, queryClient]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -48,23 +57,26 @@ const Dashboard = () => {
           table: 'profiles',
           filter: `id=eq.${user.id}`,
         },
-        () => {
-          refreshProfile();
-        }
+        () => refreshAll()
+      )
+      .on(
+        'postgres_changes' as any,
+        { event: '*', schema: 'public', table: 'referrals', filter: `referrer_id=eq.${user.id}` },
+        () => refreshAll()
       )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, refreshProfile]);
+  }, [user, refreshAll]);
 
-  // Refresh profile on tab focus
+  // Refresh on tab focus
   useEffect(() => {
-    const onFocus = () => { if (user) refreshProfile(); };
+    const onFocus = () => { if (user) refreshAll(); };
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
-  }, [user, refreshProfile]);
+  }, [user, refreshAll]);
 
   if (loading) {
     return (
@@ -119,14 +131,12 @@ const Dashboard = () => {
 
       <main className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
         <NextPrize />
+        <HowItWorks />
         <ReferralLink />
         <PrizeCards />
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-          <Ranking />
-          <div className="space-y-8">
-            <CollectiveGoal />
-            <VipGroup />
-          </div>
+        <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start">
+          <MyReferrals />
+          <VipGroup />
         </div>
       </main>
 

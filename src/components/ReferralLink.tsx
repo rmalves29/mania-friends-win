@@ -2,15 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Copy, Check, Link2, Share2, UserPlus, Gift, MessageCircle } from 'lucide-react';
+import { Copy, Check, Link2, Gift, MessageCircle } from 'lucide-react';
 
 // Adaptado do componente "Referral Card" (21st.dev) para a identidade Mania de Mulher
-const steps = [
-  { icon: Share2, text: <>Copie seu link e <strong className="text-foreground">envie para suas amigas</strong></> },
-  { icon: UserPlus, text: <>Ela se cadastra pelo seu link e <strong className="text-foreground">conta como indicação</strong></> },
-  { icon: Gift, text: <>Você <strong className="text-foreground">desbloqueia cupons</strong> a cada meta batida</> },
-];
-
 export function ReferralLink() {
   const { profile } = useAuth();
   const { toast } = useToast();
@@ -32,7 +26,7 @@ export function ReferralLink() {
   };
 
   const shareWhatsApp = () => {
-    const text = encodeURIComponent(`🎁 Vem ganhar presentes incríveis na Mania de Mulher! Use meu link: ${link}`);
+    const text = encodeURIComponent(`💕 Amiga, entra no Grupo VIP da Mania de Mulher! Lá tem ofertas exclusivas. Se cadastra pelo meu link: ${link}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
@@ -47,25 +41,14 @@ export function ReferralLink() {
           Indique e ganhe
         </span>
         <h3 className="mt-3 font-display text-2xl sm:text-3xl font-bold text-foreground">
-          Convide amigas e <span className="italic text-primary">desbloqueie cupons</span>
+          Seu link de <span className="italic text-primary">indicação</span>
         </h3>
 
-        <ul className="mt-5 space-y-3">
-          {steps.map(({ icon: Icon, text }, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 fill-mode-both"
-              style={{ animationDelay: `${150 + i * 120}ms`, animationDuration: '400ms' }}
-            >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Icon className="h-4 w-4" />
-              </span>
-              <span className="text-sm font-body text-muted-foreground">{text}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="mt-2 text-sm font-body text-muted-foreground">
+          Este é o link que você divulga. Cada amiga que se cadastrar por ele <strong className="text-foreground">e entrar no Grupo VIP</strong> conta para os seus presentes.
+        </p>
 
-        <p className="mt-6 mb-2 text-sm font-semibold font-body text-foreground">Seu link de indicação</p>
+        <div className="mt-5" />
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-xl border border-border/60 bg-background/80 px-3">
             <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
